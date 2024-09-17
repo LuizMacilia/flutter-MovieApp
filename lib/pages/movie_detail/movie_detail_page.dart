@@ -108,6 +108,32 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                                 fontSize: 17,
                               ),
                             ),
+                            const SizedBox(
+                              width: 30,
+                            ),
+                            Icon(Icons.person, color: Colors.grey, size: 17),
+                            const SizedBox(
+                              width: 5,
+                            ),
+                            Text(
+                              movie.popularity.toString(),
+                              style: const TextStyle(
+                                color: Colors.grey,
+                              ),
+                            ),
+                            const SizedBox(
+                              width: 30,
+                            ),
+                            Icon(Icons.star, color: Colors.yellow, size: 17),
+                            const SizedBox(
+                              width: 5,
+                            ),
+                            Text(
+                              '${movie.voteAverage.toStringAsFixed(1)}/10',
+                              style: const TextStyle(
+                                color: Colors.grey,
+                              ),
+                            ),
                           ],
                         ),
                         const SizedBox(
