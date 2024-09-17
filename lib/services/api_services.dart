@@ -88,4 +88,26 @@ class ApiServices {
     }
     throw Exception('failed to load now playing movies');
   }
+
+  Future<Result> getAlternativeTitles(int movieId) async {
+    final endPoint = 'movie/$movieId/alternative_titles';
+    final url = '$baseUrl$endPoint$key';
+
+    final response = await http.get(Uri.parse(url));
+    if (response.statusCode == 200) {
+      return Result.fromJson(jsonDecode(response.body));
+    }
+    throw Exception('failed to load alternative titles for this movie');
+  }
+
+  Future<Result> getWatchProviders(int movieId) async {
+    final endPoint = 'movie/$movieId/watch/providers';
+    final url = '$baseUrl$endPoint$key';
+
+    final response = await http.get(Uri.parse(url));
+    if (response.statusCode == 200) {
+      return Result.fromJson(jsonDecode(response.body));
+    }
+    throw Exception('failed to load watch providers for this movie');
+  }
 }
