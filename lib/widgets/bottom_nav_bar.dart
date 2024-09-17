@@ -34,7 +34,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
         ),
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: paginaAtual,
-          iconSize: 30,
+          iconSize: 20,
           items: const [
             BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
             BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
