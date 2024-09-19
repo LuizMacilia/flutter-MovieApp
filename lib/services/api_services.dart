@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:movie_app/common/utils.dart';
 import 'package:movie_app/models/movie_detail_model.dart';
 import 'package:movie_app/models/movie_model.dart';
+import 'package:movie_app/models/review_model.dart';
 
 const baseUrl = 'https://api.themoviedb.org/3/';
 const key = '?api_key=$apiKey';
@@ -19,6 +20,18 @@ class ApiServices {
     }
     throw Exception('failed to load now playing movies');
   }
+
+  Future<ReviewResult> getTopReviewsMovie(int movieId) async {
+    var endPoint = 'movie/$movieId/reviews';
+    final url = '$baseUrl$endPoint$key';
+
+    final response = await http.get(Uri.parse(url));
+    if (response.statusCode == 200) {
+      return ReviewResult.fromJson(jsonDecode(response.body));
+    }
+    throw Exception('failed to load now playing movies');
+  }  
+
 
   Future<Result> getNowPlayingMovies() async {
     var endPoint = 'movie/now_playing';

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:movie_app/common/utils.dart';
 import 'package:movie_app/models/movie_detail_model.dart';
 import 'package:movie_app/models/movie_model.dart';
+import 'package:movie_app/models/review_model.dart';
 import 'package:movie_app/services/api_services.dart';
 
 class MovieDetailPage extends StatefulWidget {
@@ -18,6 +19,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
 
   late Future<MovieDetailModel> movieDetail;
   late Future<Result> movieRecommendationModel;
+  late Future<ReviewResult> movieReviews;
 
   @override
   void initState() {
@@ -30,6 +32,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
     movieRecommendationModel =
         apiServices.getMovieRecommendations(widget.movieId);
     setState(() {});
+    movieReviews = apiServices.getTopReviewsMovie(100);
   }
 
   @override
