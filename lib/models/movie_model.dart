@@ -5,22 +5,29 @@ class Result {
   List<Movie> movies;
   int totalPages;
   int totalResults;
+  List<dynamic> alternativeTitles;
+
 
   Result({
     required this.page,
     required this.movies,
     required this.totalPages,
     required this.totalResults,
+    required this.alternativeTitles
   });
 
   factory Result.fromRawJson(String str) => Result.fromJson(json.decode(str));
 
   factory Result.fromJson(Map<String, dynamic> json) => Result(
+    
         page: json["page"],
         movies: List<Movie>.from(json["results"].map((x) => Movie.fromJson(x))),
         totalPages: json["total_pages"],
         totalResults: json["total_results"],
+        alternativeTitles: json['titles'] ?? [],
       );
+
+ 
 }
 
 class Movie {

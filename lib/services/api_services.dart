@@ -1,7 +1,9 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:movie_app/common/utils.dart';
+import 'package:movie_app/models/movie_alternative_title_model.dart';
 import 'package:movie_app/models/movie_detail_model.dart';
 import 'package:movie_app/models/movie_model.dart';
 import 'package:movie_app/models/review_model.dart';
@@ -102,16 +104,33 @@ class ApiServices {
     throw Exception('failed to load now playing movies');
   }
 
-  Future<Result> getAlternativeTitles(int movieId) async {
-    final endPoint = 'movie/$movieId/alternative_titles';
-    final url = '$baseUrl$endPoint$key';
+  Future<MovieAlternativeTitleModel> getAlternativeTitles(int movieId) async {
+  final endPoint = 'movie/$movieId/alternative_titles';
+  final url = '$baseUrl$endPoint$key';
 
-    final response = await http.get(Uri.parse(url));
-    if (response.statusCode == 200) {
-      return Result.fromJson(jsonDecode(response.body));
-    }
-    throw Exception('failed to load alternative titles for this movie');
+  final response = await http.get(Uri.parse(url));
+  print(response.body);
+  if (response.statusCode == 200) {
+
+    final result = Result.fromJson(jsonDecode(response.body));
+
+    // Transformar o Result no MovieAlternativeTitleModel
+    return MovieAlternativeTitleModel(
+      id: movieId, 
+      alternativeTitles: result.alternativeTitles.map((title) => Titles(
+        title: title, 
+        iso31661: '', 
+        type: '',
+        
+      )).toList(),  
+    );
+    
   }
+  print(response.statusCode);
+  throw Exception('failed to load alternative titles for this movie');
+}
+
+
 
   Future<Result> getWatchProviders(int movieId) async {
     final endPoint = 'movie/$movieId/watch/providers';

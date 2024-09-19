@@ -10,16 +10,19 @@ import 'package:movie_app/services/api_services.dart';
 class MovieDetailPage extends StatefulWidget {
   final int movieId;
   const MovieDetailPage({super.key, required this.movieId});
+  
+  
 
   @override
   State<MovieDetailPage> createState() => _MovieDetailPageState();
+  
 }
 
 class _MovieDetailPageState extends State<MovieDetailPage> {
   ApiServices apiServices = ApiServices();
 
   late Future<MovieDetailModel> movieDetail;
-  late Future<MovieAlternativeTitleModel> movieAlternativeTitle;
+  late Future<MovieAlternativeTitleModel> movieAlternativeTitles;
   late Future<Result> movieRecommendationModel;
   late Future<ReviewResult> movieReviews;
 
@@ -30,11 +33,17 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
   }
 
   fetchInitialData() {
+    setState(() {
     movieDetail = apiServices.getMovieDetail(widget.movieId);
+    movieAlternativeTitles = ApiServices().getAlternativeTitles(widget.movieId);
+  
+    });
+    
     movieRecommendationModel =
         apiServices.getMovieRecommendations(widget.movieId);
     setState(() {});
     movieReviews = apiServices.getTopReviewsMovie(100);
+    
   }
 
   @override
@@ -42,16 +51,16 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
     var size = MediaQuery.of(context).size;
     print(widget.movieId);
     return Scaffold(
+      
       body: SingleChildScrollView(
         child: FutureBuilder(
           future: movieDetail,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              final movie = snapshot.data;
 
-              String genresText =
-                  movie!.genres.map((genre) => genre.name).join(', ');
-
+               final movie = snapshot.data;
+               String genresText = movie!.genres.map((genre) => genre.name).join(', ');
+             
               return Column(
                 children: [
                   Stack(
@@ -86,6 +95,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                         const EdgeInsets.only(top: 25, left: 10, right: 10),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
+                      
                       children: [
                         Text(
                           movie.title,
@@ -94,6 +104,28 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
+
+                       FutureBuilder<MovieAlternativeTitleModel>(
+                        future: movieAlternativeTitles,
+                        builder: (context, snapshot) {
+                        if (snapshot.hasError) {
+                            //return Text('Erro: ${snapshot.error}');
+                            return Text('Erro ao carregar os títulos alternativos');
+                          } else if(snapshot.hasData) {
+                            var titles = snapshot.data!.alternativeTitles;
+                            return ListView.builder(
+                              itemCount: titles.length,
+                              itemBuilder: (context, index) {
+                                return ListTile(
+                                  title: Text(titles[index].title),
+                                );
+                              },
+                            );
+                          }
+                          return SizedBox();
+                        },
+                       ),
+
                         const SizedBox(height: 15),
                         Row(
                           children: [
@@ -116,7 +148,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                             const SizedBox(
                               width: 30,
                             ),
-                            Icon(Icons.person, color: Colors.grey, size: 17),
+                             Icon(Icons.person, color: Colors.grey, size: 17),
                             const SizedBox(
                               width: 5,
                             ),
