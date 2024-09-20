@@ -112,19 +112,9 @@ class ApiServices {
   print(response.body);
   if (response.statusCode == 200) {
 
-    final result = Result.fromJson(jsonDecode(response.body));
+    return MovieAlternativeTitleModel.fromJson(jsonDecode(response.body));
 
-    // Transformar o Result no MovieAlternativeTitleModel
-    return MovieAlternativeTitleModel(
-      id: movieId, 
-      alternativeTitles: result.alternativeTitles.map((title) => Titles(
-        title: title, 
-        iso31661: '', 
-        type: '',
-        
-      )).toList(),  
-    );
-    
+
   }
   print(response.statusCode);
   throw Exception('failed to load alternative titles for this movie');

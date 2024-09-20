@@ -49,7 +49,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    print(widget.movieId);
+    //print(widget.movieId);
     return Scaffold(
       
       body: SingleChildScrollView(
@@ -105,26 +105,30 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                           ),
                         ),
 
-                       FutureBuilder<MovieAlternativeTitleModel>(
+                       FutureBuilder(
                         future: movieAlternativeTitles,
                         builder: (context, snapshot) {
-                        if (snapshot.hasError) {
-                            //return Text('Erro: ${snapshot.error}');
-                            return Text('Erro ao carregar os títulos alternativos');
-                          } else if(snapshot.hasData) {
-                            var titles = snapshot.data!.alternativeTitles;
-                            return ListView.builder(
-                              itemCount: titles.length,
-                              itemBuilder: (context, index) {
-                                return ListTile(
-                                  title: Text(titles[index].title),
-                                );
-                              },
-                            );
+                          if(snapshot.hasData){
+                            final movieAlternativeTitles = snapshot.data;
+                            String altText = movieAlternativeTitles!.alternativeTitles.map((alternativeTitles)=>alternativeTitles.title).join(', ');
+                            return Column(children: [
+                              Padding(padding: const EdgeInsets.only(top: 10, left: 5, right: 10),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text('Títulos alternativos: $altText',
+                                  style: const TextStyle(
+                            fontSize: 15,
+                          ),)
+                                ],
+                              ),
+                              )
+                            ]);
+                          }else{
+                           print(snapshot.error);
+                            return Text('Erro ao carregar os títulos alternativos.');
                           }
-                          return SizedBox();
-                        },
-                       ),
+                        }),
 
                         const SizedBox(height: 15),
                         Row(

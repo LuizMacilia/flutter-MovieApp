@@ -1,23 +1,22 @@
 import 'dart:convert';
 
 class MovieAlternativeTitleModel {
-  final int id;
-  final List<Titles> alternativeTitles;
+   int id;
+   List<Titles> alternativeTitles;
 
   MovieAlternativeTitleModel({
     required this.id,
     required this.alternativeTitles,
   });
 
-  factory MovieAlternativeTitleModel.fromJson(Map<String, dynamic> json) {
-    var list = json['titles'] as List;
-    List<Titles> titleList = list.map((i) => Titles.fromJson(i)).toList();
+  factory MovieAlternativeTitleModel.fromRawJson(String str) =>
+      MovieAlternativeTitleModel.fromJson(json.decode(str));
 
-    return MovieAlternativeTitleModel(
-      id: json['id'] ?? 0, // Garantir que 'id' nunca seja null
-      alternativeTitles: titleList, // Mapeamento correto dos títulos
-    );
-  }
+  factory MovieAlternativeTitleModel.fromJson(Map<String, dynamic> json) =>
+      MovieAlternativeTitleModel(
+        alternativeTitles: List<Titles>.from(json["titles"].map((x) => Titles.fromJson(x))),
+        id: json["id"] ?? [],
+      );
 }
 
 class Titles {
@@ -32,12 +31,12 @@ class Titles {
     required this.type,
   });
 
-  factory Titles.fromJson(Map<String, dynamic> json) {
-    return Titles(
-      iso31661: json['iso_3166_1'] ?? '', // Tratar iso_3166_1 como String
-      title: json['title'] ?? 'Título desconhecido', // Tratar title como String
-      type: json['type'] ?? '', // Tratar type como String
-    );
-  }
+  factory Titles.fromRawJson(String str) => Titles.fromJson(json.decode(str));
+
+  factory Titles.fromJson(Map<String, dynamic> json) => Titles(
+        iso31661: json["iso_3166_1"] ?? 0,
+        title: json["title"] ?? '',
+        type: json["type"] ?? '',
+      );
 }
 
