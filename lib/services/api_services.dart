@@ -27,13 +27,15 @@ class ApiServices {
     var endPoint = 'movie/$movieId/reviews';
     final url = '$baseUrl$endPoint$key';
 
-    final response = await http.get(Uri.parse(url));
+    final response = await http.get(Uri.parse(url), headers: {
+      'Authorization':
+          'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3NTAyYjhjMDMxYzc5NzkwZmU1YzBiNGY5NGZkNzcwZCIsInN1YiI6IjYzMmMxYjAyYmE0ODAyMDA4MTcyNjM5NSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.N1SoB26LWgsA33c-5X0DT5haVOD4CfWfRhwpDu9eGkc'
+    });
     if (response.statusCode == 200) {
       return ReviewResult.fromJson(jsonDecode(response.body));
     }
     throw Exception('failed to load now playing movies');
-  }  
-
+  }
 
   Future<Result> getNowPlayingMovies() async {
     var endPoint = 'movie/now_playing';
@@ -105,22 +107,17 @@ class ApiServices {
   }
 
   Future<MovieAlternativeTitleModel> getAlternativeTitles(int movieId) async {
-  final endPoint = 'movie/$movieId/alternative_titles';
-  final url = '$baseUrl$endPoint$key';
+    final endPoint = 'movie/$movieId/alternative_titles';
+    final url = '$baseUrl$endPoint$key';
 
-  final response = await http.get(Uri.parse(url));
-  print(response.body);
-  if (response.statusCode == 200) {
-
-    return MovieAlternativeTitleModel.fromJson(jsonDecode(response.body));
-
-
+    final response = await http.get(Uri.parse(url));
+    print(response.body);
+    if (response.statusCode == 200) {
+      return MovieAlternativeTitleModel.fromJson(jsonDecode(response.body));
+    }
+    print(response.statusCode);
+    throw Exception('failed to load alternative titles for this movie');
   }
-  print(response.statusCode);
-  throw Exception('failed to load alternative titles for this movie');
-}
-
-
 
   Future<Result> getWatchProviders(int movieId) async {
     final endPoint = 'movie/$movieId/watch/providers';
